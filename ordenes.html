@@ -31,10 +31,9 @@
     <section class="text-prin">
         <div class="dashboard-container">
             <div class="titulo-boton">
-                <h1>Clientes</h1>
-                <p>Gestión de clientes publicitarios de la emisora</p>
+                <h1>Órdenes de Publicidad</h1>
+                <p>Registro y gestión de órdenes de pauta</p>
             </div>
-            <button class="nueva-orden" > <a href="#">+ NUEVO CLIENTE</a></button>
         </div>
     </section>
 
@@ -42,59 +41,85 @@
         <div class="main-card">
             
             <div class="tabs-container">
-                <button class="tab-link active" id="tab-lista">LISTA DE CLIENTES</button>
-                <button class="tab-link" id="tab-registro">REGISTRAR CLIENTE</button>
+                <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
+                <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
+                <button class="tab-link active" id="tab-lista">GENERAR FACTURA</button>
+                <button class="tab-link" id="tab-registro">GENERAR CERTIFICACION</button>
             </div>
             
             <hr class="tab-separator">
 
-            <section id="section-lista" class="tab-content">
+            <section id="lista" class="tab-content">
                 
                 <div class="search-bar">
-                    <input type="text" placeholder="Buscar por NIT o nombre..." id="input-busqueda">
+                    <input type="text" placeholder="Buscar por número, cliente o producto..." id="busqueda">
                     <button type="button" class="btn-buscar">BUSCAR</button>
                 </div>
                 
                 <table class="main-table">
                     <thead>
                         <tr>
-                            <th>NIT</th>
-                            <th>NOMBRE</th>
-                            <th>DIRECCIÓN</th>
-                            <th>TELÉFONO</th>
-                            <th>CORREO</th>
-                            <th>ACCIONES</th>
+                            <th>N° Orden</th>
+                            <th>N° Presupuesto</th>
+                            <th>Cliente</th>
+                            <th>Producto</th>
+                            <th>Referencia</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Cuñas/día</th>
+                            <th>Duración</th>
+                            <th>Valor</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>800185826-2</td>
-                            <td>Radio Regional Independiente L.</td>
-                            <td>Calle 12 #4-56</td>
-                            <td>312-555-0101</td>
-                            <td>radoregcional@reiltda.com</td>
+                            <td>165</td>
+                            <td>6</td>
+                            <td>Bancolombia</td>
+                            <td>Marcas</td>
+                            <td>Campaña Feb</td>
+                            <td>03/03/2014</td>
+                            <td>31/03/2014</td>
+                            <td>6</td>
+                            <td>30 seg</td>
+                            <td>$420.000</td>
+                            <td>Activa</td>
                             <td class="acciones-cell">
                                 <button type="button" class="btn-action edit">✏️</button>
                                 <button type="button" class="btn-action delete">🗑️</button>
                             </td>
                         </tr>
                         <tr>
-                            <td>860007738-4</td>
-                            <td>Bancolombia S.A.</td>
-                            <td>Av. El Dorado 68C-61</td>
-                            <td>300-555-0200</td>
-                            <td>mkt@bancolombia.com.co</td>
+                            <td>165</td>
+                            <td>6</td>
+                            <td>Bancolombia</td>
+                            <td>Marcas</td>
+                            <td>Campaña Feb</td>
+                            <td>03/03/2014</td>
+                            <td>31/03/2014</td>
+                            <td>6</td>
+                            <td>30 seg</td>
+                            <td>$420.000</td>
+                            <td>Activa</td>
                             <td class="acciones-cell">
                                 <button type="button" class="btn-action edit">✏️</button>
                                 <button type="button" class="btn-action delete">🗑️</button>
                             </td>
                         </tr>
                         <tr>
-                            <td>900073222-1</td>
-                            <td>Claro Colombia S.A.S.</td>
-                            <td>Carrera 7 #76-35</td>
-                            <td>301-555-0333</td>
-                            <td>publicidad@claro.com.co</td>
+                            <td>165</td>
+                            <td>6</td>
+                            <td>Bancolombia</td>
+                            <td>Marcas</td>
+                            <td>Campaña Feb</td>
+                            <td>03/03/2014</td>
+                            <td>31/03/2014</td>
+                            <td>6</td>
+                            <td>30 seg</td>
+                            <td>$420.000</td>
+                            <td>Activa</td>
                             <td class="acciones-cell">
                                 <button type="button" class="btn-action edit">✏️</button>
                                 <button type="button" class="btn-action delete">🗑️</button>
@@ -104,7 +129,7 @@
                 </table>
             </section>
 
-            <section id="section-registro" class="tab-content" style="display:none">
+            <section id="registro" class="tab-content" style="display:none">
                 
                 <form class="form-registro">
                     <div class="form-grid">
