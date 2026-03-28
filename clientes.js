@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Función para cambiar de pestaña
     function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
-        // Ocultamos una y mostramos la otra usando el estilo "display"
-        seccionAOcultar.style.display = 'none';
-        seccionAMostrar.style.display = 'block';
+        // Usamos clases en lugar de inline styles por consistency
+        seccionAOcultar.classList.remove('active');
+        seccionAMostrar.classList.add('active');
 
-        // Cambiamos la apariencia de los botones (clase .active que hará tu amigo de CSS)
+        // Cambiamos la apariencia de los botones
         botonActivo.classList.add('active');
         botonInactivo.classList.remove('active');
     }
