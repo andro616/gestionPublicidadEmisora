@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styleClientes.css">
     <title>Celestial Stereo 104.1 FM — Sistema de Gestión Publicitaria</title>
 </head>
+
 <body>
     <header>
         <div class="topbar-brand">
@@ -34,27 +36,27 @@
                 <h1>Clientes</h1>
                 <p>Gestión de clientes publicitarios de la emisora</p>
             </div>
-            <button class="nueva-orden" > <a href="#">+ NUEVO CLIENTE</a></button>
+            <button class="nueva-orden"> <a href="#">+ NUEVO CLIENTE</a></button>
         </div>
     </section>
 
     <main class="page-grid">
         <div class="main-card">
-            
+
             <div class="tabs-container">
                 <button class="tab-link active" id="tab-lista">LISTA DE CLIENTES</button>
                 <button class="tab-link" id="tab-registro">REGISTRAR CLIENTE</button>
             </div>
-            
+
             <hr class="tab-separator">
 
             <section id="section-lista" class="tab-content">
-                
+
                 <div class="search-bar">
                     <input type="text" placeholder="Buscar por NIT o nombre..." id="input-busqueda">
                     <button type="button" class="btn-buscar">BUSCAR</button>
                 </div>
-                
+
                 <table class="main-table">
                     <thead>
                         <tr>
@@ -105,35 +107,42 @@
             </section>
 
             <section id="section-registro" class="tab-content" style="display:none">
-                
+                <div class="registro-clientes-tex">
+                    <div class="titulo-clientes-registro">
+                        <h1>Registrar Nuevo Cliente</h1>
+                        <p>Módulo Celestial Stereo — Clientes</p>
+                    </div>
+                </div>
                 <form class="form-registro">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>NIT / CÉDULA</label>
-                            <input type="text" name="nit" required>
+                            <input type="text" name="nit" placeholder="584265775-1" required>
                         </div>
                         <div class="form-group">
                             <label>NOMBRE COMPLETO / RAZÓN SOCIAL</label>
-                            <input type="text" name="nombre" required>
+                            <input type="text" name="nombre" placeholder="Nombre de la empresa" required>
                         </div>
                         <div class="form-group">
                             <label>DIRECCIÓN</label>
-                            <input type="text" name="direccion">
+                            <input type="text" name="direccion"  placeholder="calle 20 #42a-45">
                         </div>
                         <div class="form-group">
                             <label>TELÉFONO DE CONTACTO</label>
-                            <input type="tel" name="telefono">
+                            <input type="tel" name="telefono" placeholder="300-555-0000">
                         </div>
                         <div class="form-group">
                             <label>CORREO ELECTRÓNICO</label>
-                            <input type="email" name="correo">
+                            <input type="email" name="correo" placeholder="contacto@empresa.com">
                         </div>
                     </div>
                     <button type="submit" class="btn-save">GUARDAR CLIENTE</button>
+                    <button class="btn-save">LIMPIAR</button>
                 </form>
             </section>
         </div>
     </main>
     <script src="clientes.js"></script>
 </body>
+
 </html>
