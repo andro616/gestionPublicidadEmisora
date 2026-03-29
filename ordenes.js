@@ -1,25 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
     const btnLista = document.getElementById('tab-lista');
     const btnRegistro = document.getElementById('tab-registro');
+    const btnFactura = document.getElementById('tab-factura');
+    const btnCertificacion = document.getElementById('tab-certificacion');
+
     const sectionLista = document.getElementById('lista');
     const sectionRegistro = document.getElementById('registro');
+    const sectionFactura = document.getElementById('factura');
+    const sectionCertificacion = document.getElementById('certificacion');
 
-    function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
-        if (!seccionAMostrar || !seccionAOcultar || !botonActivo || !botonInactivo) return;
-        seccionAOcultar.style.display = 'none';
-        seccionAMostrar.style.display = 'block';
-        botonActivo.classList.add('active');
-        botonInactivo.classList.remove('active');
+    const btnGoFactura = document.getElementById('btn-go-factura');
+    const btnGoCertificacion = document.getElementById('btn-go-certificacion');
+
+    const tabs = [btnLista, btnRegistro, btnFactura, btnCertificacion].filter(Boolean);
+    const sections = [sectionLista, sectionRegistro, sectionFactura, sectionCertificacion].filter(Boolean);
+
+    function inicializarVista() {
+        if (!btnLista || !sectionLista) return;
+        activarTab(sectionLista, btnLista);
     }
 
-    if (btnLista && btnRegistro && sectionLista && sectionRegistro) {
-        btnLista.addEventListener('click', () => {
-            cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
+    function activarTab(seccionActiva, botonActivo) {
+        if (!seccionActiva || !botonActivo) return;
+
+        sections.forEach(seccion => {
+            seccion.classList.remove('active');
         });
 
-        btnRegistro.addEventListener('click', () => {
-            cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
         });
+
+        seccionActiva.classList.add('active');
+        botonActivo.classList.add('active');
+    }
+
+    inicializarVista();
+
+    if (btnLista && sectionLista) {
+        btnLista.addEventListener('click', () => activarTab(sectionLista, btnLista));
+    }
+
+    if (btnRegistro && sectionRegistro) {
+        btnRegistro.addEventListener('click', () => activarTab(sectionRegistro, btnRegistro));
+    }
+
+    if (btnFactura && sectionFactura) {
+        btnFactura.addEventListener('click', () => activarTab(sectionFactura, btnFactura));
+    }
+
+    if (btnCertificacion && sectionCertificacion) {
+        btnCertificacion.addEventListener('click', () => activarTab(sectionCertificacion, btnCertificacion));
+    }
+
+    if (btnGoFactura && btnFactura && sectionFactura) {
+        btnGoFactura.addEventListener('click', () => activarTab(sectionFactura, btnFactura));
+    }
+
+    if (btnGoCertificacion && btnCertificacion && sectionCertificacion) {
+        btnGoCertificacion.addEventListener('click', () => activarTab(sectionCertificacion, btnCertificacion));
     }
 
     const menuLinks = document.querySelectorAll('header nav ul li a');

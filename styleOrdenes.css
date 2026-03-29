@@ -75,6 +75,12 @@ header nav ul li a:hover {
     padding-bottom: 22px;
 }
 
+header nav ul li a.active-link {
+    color: var(--white);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 22px;
+}
+
 header .boton-salir button {
     background: transparent;
     border: 1px solid var(--border);
@@ -418,6 +424,115 @@ input[type="checkbox"] {
     border-color: var(--gold);
 }
 
+/* DOCUMENTOS: FACTURA Y CERTIFICACION */
+.doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.doc-header h2 {
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 0.2rem;
+}
+
+.doc-header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.doc-preview {
+    background: #ffffff;
+    color: #1b1b1b;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid #d7d7d7;
+}
+
+.doc-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.doc-logo span {
+    font-size: 1.5rem;
+}
+
+.doc-logo-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.doc-logo-meta {
+    font-size: 0.8rem;
+    color: #545454;
+}
+
+.doc-preview h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+.doc-field {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #cfcfcf;
+    font-size: 0.9rem;
+}
+
+.doc-field span {
+    color: #444;
+}
+
+.doc-total {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 2px solid #1f1f1f;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.doc-total b {
+    font-size: 1.1rem;
+}
+
+.doc-total small {
+    color: #555;
+}
+
+.doc-note {
+    font-size: 0.85rem;
+    color: #4b4b4b;
+    margin-top: 1rem;
+    line-height: 1.45;
+}
+
+.doc-signature {
+    margin-top: 2rem;
+    text-align: center;
+    color: #2a2a2a;
+}
+
+.doc-signature p {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.doc-signature small {
+    display: block;
+    margin-top: 0.2rem;
+    color: #555;
+}
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
     .dashboard-container,
@@ -443,5 +558,10 @@ input[type="checkbox"] {
     .main-table {
         display: block;
         overflow-x: auto;
+    }
+
+    .doc-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

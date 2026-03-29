@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/avif" href="img/logo.avif">
     <link rel="stylesheet" href="styleOrdenes.css">
     <title>Celestial Stereo 104.1 FM — Sistema de Gestión Publicitaria</title>
 </head>
@@ -45,13 +46,13 @@
             <div class="tabs-container">
                 <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
                 <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
-                <button class="tab-link active" id="tab-lista">GENERAR FACTURA</button>
-                <button class="tab-link" id="tab-registro">GENERAR CERTIFICACION</button>
+                <button class="tab-link" id="tab-factura">GENERAR FACTURA</button>
+                <button class="tab-link" id="tab-certificacion">GENERAR CERTIFICACION</button>
             </div>
 
             <hr class="tab-separator">
 
-            <section id="lista" class="tab-content">
+            <section id="lista" class="tab-content active">
 
                 <div class="search-bar">
                     <input type="text" placeholder="Buscar por número, cliente o producto..." id="busqueda">
@@ -131,7 +132,8 @@
                 </table>
             </section>
 
-            <section id="registro" class="tab-content" style="display:none">
+            <section id="registro" class="tab-content">
+
                 <div class="registro-clientes-tex">
                     <div class="titulo-clientes-registro">
                         <h1>Orden de Publicidad</h1>
@@ -214,63 +216,86 @@
                             VALOR TOTAL DE LA ORDEN</div>
                     </div>
                     <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1.2rem">
-                        <button class="btn btn-gold"> Guardar Orden</button>
-                        <button class="btn btn-success"> Generar Factura</button>
-                        <button class="btn btn-info"> Generar Certificación</button>
-                        <button class="btn btn-danger"> Anular Orden</button>
-                        <button class="btn btn-outline"> Limpiar</button>
+                        <button type="button" class="btn btn-gold">Guardar Orden</button>
+                        <button type="button" class="btn btn-success" id="btn-go-factura">Generar Factura</button>
+                        <button type="button" class="btn btn-info" id="btn-go-certificacion">Generar Certificación</button>
+                        <button type="button" class="btn btn-danger">Anular Orden</button>
+                        <button type="reset" class="btn btn-outline">Limpiar</button>
                     </div>
                 </form>
-                <button type="submit" class="btn-save">GUARDAR CLIENTE</button>
-                <button class="btn-limpiar">LIMPIAR</button>
             </section>
 
-            <section id="factura" class="" style="display:none">
-                <div id="tab-factura" class="tab-content">
-                    <div class="page-header" style="margin-bottom:1rem">
-                        <div>
-                            <h1 style="font-size:1.3rem">Generar Factura</h1>
-                            <p>Vista previa del documento listo para impresión</p>
-                        </div>
-                        <button class="btn btn-gold" onclick="window.print()">🖨 Imprimir</button>
+            <section id="factura" class="tab-content">
+                <div class="doc-header">
+                    <div>
+                        <h2>Generar Factura</h2>
+                        <p>Vista previa del documento listo para impresión</p>
                     </div>
-                    <div class="doc-preview">
-                        <div class="doc-logo">
-                            <span class="radio-wave">📻</span>
-                            <div>
-                                <div class="doc-logo-name">Corporación Juan Valdez de Santa Rosa de Cabal</div>
-                                <div class="doc-logo-freq">CELESTIAL STEREO 104.1 FM · NIT 890.001.901-1</div>
-                            </div>
-                        </div>
-                        <h2>Factura de Publicidad Radial</h2>
-                        <div class="doc-field"><span>Fecha:</span><strong>07 de mayo de 2014</strong></div>
-                        <div class="doc-field"><span>Publicidad Radial — Transmitida en la emisora Celestial Stereo
-                                104.1 FM</span></div>
-                        <div class="doc-field"><span>Orden de Publicidad No.:</span><strong>165</strong></div>
-                        <div class="doc-field"><span>Transmisión:</span><strong>03/03/2014 — 31/03/2014</strong></div>
-                        <div class="doc-field"><span>Cliente:</span><strong>BANCOLOMBIA</strong></div>
-                        <div class="doc-field"><span>Producto:</span><strong>MARCAS</strong></div>
-                        <div class="doc-field"><span>Cuñas diarias:</span><strong>6</strong></div>
-                        <div class="doc-field"><span>Días de pauta:</span><strong>LUNES A VIERNES</strong></div>
-                        <div class="doc-field"><span>Horarios:</span><strong>8:00, 10:00, 12:00, 14:00, 16:00,
-                                19:00</strong></div>
-                        <div class="doc-total">
-                            <b>TOTAL: $420.000</b><br />
-                            <small>CUATROCIENTOS VEINTE MIL PESOS M/CTE</small>
-                        </div>
-                        <p style="font-size:0.8rem;color:#555;margin-top:1rem">
-                            FAVOR HACER CHEQUE Y/O TRANSFERENCIA A CORPORACIÓN JUAN VALDEZ DE SANTA ROSA DE CABAL,
-                            IDENTIFICADA CON NIT No. 890.001.901-1.<br />
-                            Y DEPOSITAR EN EL BANCO DE BOGOTÁ A LA CUENTA CORRIENTE No. 512-01020-8.
-                        </p>
-                        <div class="doc-sig">
-                            <p>HÉCTOR ARIEL ALARCON CASPIO</p>
-                            <p>Director Emisora Comunitaria</p>
-                        </div>
-                    </div>
+                    <button type="button" class="btn btn-gold" onclick="window.print()">Imprimir</button>
                 </div>
+
+                <article class="doc-preview">
+                    <div class="doc-logo">
+                        <span>📻</span>
+                        <div>
+                            <p class="doc-logo-name">Corporación Juan Valdez de Santa Rosa de Cabal</p>
+                            <p class="doc-logo-meta">CELESTIAL STEREO 104.1 FM · NIT 890.001.901-1</p>
+                        </div>
+                    </div>
+
+                    <h3>Factura de Publicidad Radial</h3>
+                    <div class="doc-field"><span>Fecha:</span><strong>07 de mayo de 2014</strong></div>
+                    <div class="doc-field"><span>Orden de Publicidad No.:</span><strong>165</strong></div>
+                    <div class="doc-field"><span>Transmisión:</span><strong>03/03/2014 — 31/03/2014</strong></div>
+                    <div class="doc-field"><span>Cliente:</span><strong>BANCOLOMBIA</strong></div>
+                    <div class="doc-field"><span>Producto:</span><strong>MARCAS</strong></div>
+                    <div class="doc-field"><span>Cuñas diarias:</span><strong>6</strong></div>
+                    <div class="doc-field"><span>Días de pauta:</span><strong>LUNES A VIERNES</strong></div>
+                    <div class="doc-field"><span>Horarios:</span><strong>8:00, 10:00, 12:00, 14:00, 16:00, 19:00</strong></div>
+
+                    <div class="doc-total">
+                        <b>TOTAL: $420.000</b>
+                        <small>CUATROCIENTOS VEINTE MIL PESOS M/CTE</small>
+                    </div>
+
+                    <p class="doc-note">
+                        Favor hacer cheque y/o transferencia a Corporación Juan Valdez de Santa Rosa de Cabal,
+                        identificada con NIT No. 890.001.901-1.
+                    </p>
+                </article>
             </section>
 
+<<<<<<< HEAD
+            <section id="certificacion" class="tab-content">
+                <div class="doc-header">
+                    <div>
+                        <h2>Generar Certificación</h2>
+                        <p>Documento de cumplimiento de transmisión</p>
+                    </div>
+                    <button type="button" class="btn btn-gold" onclick="window.print()">Imprimir</button>
+                </div>
+
+                <article class="doc-preview">
+                    <h3>Certificación de Publicidad</h3>
+                    <p class="doc-note">
+                        Por medio del presente documento certificamos que la pauta publicitaria descrita fue
+                        transmitida en la emisora Celestial Stereo 104.1 FM según las condiciones acordadas.
+                    </p>
+
+                    <div class="doc-field"><span>Orden No.:</span><strong>165</strong></div>
+                    <div class="doc-field"><span>Cliente:</span><strong>BANCOLOMBIA</strong></div>
+                    <div class="doc-field"><span>Producto:</span><strong>MARCAS</strong></div>
+                    <div class="doc-field"><span>Vigencia:</span><strong>03/03/2014 — 31/03/2014</strong></div>
+                    <div class="doc-field"><span>Frecuencia diaria:</span><strong>6 cuñas de 30 segundos</strong></div>
+
+                    <div class="doc-signature">
+                        <p>HÉCTOR ARIEL ALARCÓN CASPIO</p>
+                        <small>Director Emisora Comunitaria</small>
+                    </div>
+                </article>
+            </section>
+        </div>
+=======
             <section id="certificacion" class="" style="display:none">
                 <div id="tab-cert" class="tab-content">
                     <div class="page-header" style="margin-bottom:1rem">
@@ -313,6 +338,7 @@
                         </div>
                     </div>
         </section>
+>>>>>>> upstream/main
     </main>
     <script src="ordenes.js"></script>
 </body>
