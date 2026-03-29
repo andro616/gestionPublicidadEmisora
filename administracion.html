@@ -138,39 +138,75 @@
                     <button type="reset" class="btn-limpiar">LIMPIAR</button>
                 </form>
             </section>
-        </div>
 
-        <section id="correo" class="">
-            <div class="registro-clientes-tex">
-                <div class="titulo-clientes-registro">
-                    <h1>Orden de Publicidad</h1>
-                    <p>Módulo Nueva Orden</p>
-                </div>
-                <div id="tab-email-config" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Configuración E-mail <small>Servidor SMTP</small></div>
-                        </div>
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="email" placeholder="emisora@celestialstereo.com" />
-                        </div>
-                        <div class="form-group">
-                            <label>Contraseña</label>
-                            <input type="password" placeholder="••••••••" />
-                        </div>
-                        <div class="form-group">
-                            <label>Confirmar Contraseña</label>
-                            <input type="password" placeholder="••••••••" />
-                        </div>
-                        <button class="btn btn-gold" style="margin-top:0.5rem"
-                            onclick="showAlert('Configuración de e-mail guardada correctamente.')">
-                            💡 Guardar Configuración
-                        </button>
+            <section id="section-email" class="tab-content">
+                <div class="registro-clientes-tex">
+                    <div class="titulo-clientes-registro">
+                        <h1>Configuración E-mail</h1>
+                        <p>Parámetros del servidor SMTP de Celestial Stereo</p>
                     </div>
                 </div>
-            </div>
-        </section>
+
+                <form class="form-registro form-email" id="form-email-config">
+                    <div class="email-layout">
+                        <div class="email-card">
+                            <h2>Datos de acceso</h2>
+                            <p class="email-card-text">Define la cuenta principal desde la cual el sistema enviará facturas, certificaciones y notificaciones.</p>
+
+                            <div class="form-grid form-grid-email">
+                                <div class="form-group full-width">
+                                    <label>CORREO EMISOR</label>
+                                    <input type="email" id="email-remitente" placeholder="emisora@celestialstereo.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CONTRASEÑA</label>
+                                    <input type="password" id="email-password" placeholder="Contraseña del correo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CONFIRMAR CONTRASEÑA</label>
+                                    <input type="password" id="email-password-confirm" placeholder="Repetir contraseña" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="email-card">
+                            <h2>Servidor SMTP</h2>
+                            <p class="email-card-text">Configura los parámetros técnicos para el envío automático de correos desde el sistema.</p>
+
+                            <div class="form-grid form-grid-email">
+                                <div class="form-group">
+                                    <label>HOST SMTP</label>
+                                    <input type="text" id="smtp-host" placeholder="smtp.gmail.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>PUERTO</label>
+                                    <input type="number" id="smtp-port" placeholder="587" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>SEGURIDAD</label>
+                                    <select id="smtp-security" required>
+                                        <option value="tls">TLS</option>
+                                        <option value="ssl">SSL</option>
+                                        <option value="none">Sin cifrado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>CORREO DE RESPUESTA</label>
+                                    <input type="email" id="smtp-replyto" placeholder="soporte@celestialstereo.com">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="email-status" id="email-status" aria-live="polite"></div>
+
+                    <div class="email-actions">
+                        <button type="submit" class="btn-save">GUARDAR CONFIGURACIÓN</button>
+                        <button type="button" class="btn-limpiar" id="btn-test-email">PROBAR CONEXIÓN</button>
+                    </div>
+                </form>
+            </section>
+        </div>
 
     </main>
     <script src="administracion.js"></script>

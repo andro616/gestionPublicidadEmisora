@@ -367,6 +367,83 @@ header .boton-salir button {
     border-color: var(--gold);
 }
 
+.form-email {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.email-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.email-card {
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.35rem;
+}
+
+.email-card h2 {
+    font-family: var(--font-titles);
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 0.35rem;
+}
+
+.email-card-text {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-bottom: 1rem;
+}
+
+.form-grid-email {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.email-status {
+    display: none;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+}
+
+.email-status.show {
+    display: block;
+}
+
+.email-status.success {
+    background: rgba(39, 174, 96, 0.12);
+    border-color: rgba(39, 174, 96, 0.35);
+    color: #7ee2a6;
+}
+
+.email-status.error {
+    background: rgba(192, 57, 43, 0.12);
+    border-color: rgba(192, 57, 43, 0.35);
+    color: #ff9f97;
+}
+
+.email-status.info {
+    background: rgba(201, 168, 76, 0.12);
+    border-color: rgba(201, 168, 76, 0.35);
+    color: #f5d786;
+}
+
+.email-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 @media (max-width: 900px) {
     .dashboard-container,
     .page-grid {
@@ -375,6 +452,11 @@ header .boton-salir button {
     }
 
     .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .email-layout,
+    .form-grid-email {
         grid-template-columns: 1fr;
     }
 

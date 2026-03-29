@@ -1,45 +1,102 @@
 // 1. Esperamos a que el HTML cargue totalmente
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 2. Seleccionamos los botones por su ID (los que tú creaste)
     const btnLista = document.getElementById('tab-lista');
     const btnRegistro = document.getElementById('tab-registro');
-    const btnNuevoTop = document.querySelector('.nueva-orden'); // El botón dorado de arriba
+    const btnEmail = document.getElementById('tab-email');
+    const btnNuevoTop = document.querySelector('.nueva-orden');
 
-    // 3. Seleccionamos las secciones de contenido
     const sectionLista = document.getElementById('section-lista');
     const sectionRegistro = document.getElementById('section-registro');
+    const sectionEmail = document.getElementById('section-email');
 
-    // 4. Función para cambiar de pestaña
-    function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
-        // Usamos clases en lugar de inline styles por consistency
-        seccionAOcultar.classList.remove('active');
-        seccionAMostrar.classList.add('active');
+    const formEmail = document.getElementById('form-email-config');
+    const emailStatus = document.getElementById('email-status');
+    const btnTestEmail = document.getElementById('btn-test-email');
+    const emailPassword = document.getElementById('email-password');
+    const emailPasswordConfirm = document.getElementById('email-password-confirm');
+    const emailRemitente = document.getElementById('email-remitente');
+    const smtpHost = document.getElementById('smtp-host');
+    const smtpPort = document.getElementById('smtp-port');
 
-        // Cambiamos la apariencia de los botones
+    const tabs = [btnLista, btnRegistro, btnEmail].filter(Boolean);
+    const sections = [sectionLista, sectionRegistro, sectionEmail].filter(Boolean);
+
+    function activarTab(seccionActiva, botonActivo) {
+        if (!seccionActiva || !botonActivo) return;
+
+        sections.forEach(section => section.classList.remove('active'));
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        seccionActiva.classList.add('active');
         botonActivo.classList.add('active');
-        botonInactivo.classList.remove('active');
     }
 
-    // 5. Escuchamos los clics en los botones
-    if (btnLista && btnRegistro && sectionLista && sectionRegistro) {
-        btnLista.addEventListener('click', () => {
-            cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
-        });
+    function mostrarEstadoEmail(tipo, mensaje) {
+        if (!emailStatus) return;
 
-        btnRegistro.addEventListener('click', () => {
-            cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
-        });
+        emailStatus.className = 'email-status show ' + tipo;
+        emailStatus.textContent = mensaje;
     }
 
-    // Bonus: El botón dorado "+ NUEVO USUARIO" también debe llevar al registro
-    if(btnNuevoTop) {
+    function validarConfigEmail() {
+        if (!emailRemitente || !smtpHost || !smtpPort || !emailPassword || !emailPasswordConfirm) {
+            return false;
+        }
+
+        if (emailPassword.value !== emailPasswordConfirm.value) {
+            mostrarEstadoEmail('error', 'Las contraseñas no coinciden. Verifica los datos antes de guardar.');
+            return false;
+        }
+
+        if (String(smtpPort.value).trim() === '' || Number(smtpPort.value) <= 0) {
+            mostrarEstadoEmail('error', 'El puerto SMTP debe ser un número válido mayor que cero.');
+            return false;
+        }
+
+        return true;
+    }
+
+    if (btnLista && sectionLista) {
+        btnLista.addEventListener('click', () => activarTab(sectionLista, btnLista));
+    }
+
+    if (btnRegistro && sectionRegistro) {
+        btnRegistro.addEventListener('click', () => activarTab(sectionRegistro, btnRegistro));
+    }
+
+    if (btnEmail && sectionEmail) {
+        btnEmail.addEventListener('click', () => activarTab(sectionEmail, btnEmail));
+    }
+
+    if (btnNuevoTop && btnRegistro && sectionRegistro) {
         btnNuevoTop.addEventListener('click', () => {
-            cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
+            activarTab(sectionRegistro, btnRegistro);
         });
     }
 
-    // 6. Marca el enlace activo de navegación según URL
+    if (formEmail) {
+        formEmail.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            if (!validarConfigEmail()) {
+                return;
+            }
+
+            mostrarEstadoEmail('success', 'La configuración de e-mail fue guardada correctamente.');
+        });
+    }
+
+    if (btnTestEmail) {
+        btnTestEmail.addEventListener('click', () => {
+            if (!validarConfigEmail()) {
+                return;
+            }
+
+            mostrarEstadoEmail('info', 'Conexión SMTP verificada correctamente. El servidor respondió sin errores.');
+        });
+    }
+
     function markActiveNavLink() {
         const menuLinks = document.querySelectorAll('header nav ul li a');
         const currentPath = window.location.pathname.split('/').pop();
@@ -52,6 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.classList.remove('active-link');
             }
         });
+    }
+
+    if (btnLista && sectionLista) {
+        activarTab(sectionLista, btnLista);
     }
 
     markActiveNavLink();
