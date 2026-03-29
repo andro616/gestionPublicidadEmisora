@@ -26,8 +26,14 @@
             </ul>
         </nav>
 
-        <div class="boton-salir">
-            <button>Salir</button>
+        <div class="header-actions">
+            <div class="admin-status is-active" aria-label="Administrador activo">
+                <span class="status-dot"></span>
+                <span>Administrador</span>
+            </div>
+            <div class="boton-salir">
+                <button>Salir</button>
+            </div>
         </div>
     </header>
 
@@ -194,32 +200,43 @@
                             <label>Duración (segundos)</label>
                             <input type="number" id="ord-duracion" placeholder="30">
                         </div>
-                        <hr class="section-divider" />
-                        <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem">
-                            <input type="checkbox" id="ord-24h" />
-                            <label for="ord-24h" style="color:var(--muted);font-size:0.85rem">Horarios 24H</label>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Horarios</label>
-                                <textarea id="ord-horarios"
-                                    placeholder="8:00, 10:00, 12:00, 14:00, 16:00, 19:00">8:00, 10:00, 12:00, 14:00, 16:00, 19:00</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Días Pauta</label>
-                                <textarea id="ord-dias" placeholder="LUNES A VIERNES">LUNES A VIERNES</textarea>
-                            </div>
-                        </div>
-                        <hr class="section-divider" />
-                        <div class="value-display" id="valor-display">$0</div>
-                        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem;letter-spacing:0.1em">
-                            VALOR TOTAL DE LA ORDEN</div>
                     </div>
-                    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1.2rem">
-                        <button type="button" class="btn btn-gold">Guardar Orden</button>
-                        <button type="button" class="btn btn-success" id="btn-go-factura">Generar Factura</button>
-                        <button type="button" class="btn btn-info" id="btn-go-certificacion">Generar Certificación</button>
-                        <button type="button" class="btn btn-danger">Anular Orden</button>
+
+                    <div class="section-divider"></div>
+
+                    <div class="orden-extra-layout">
+                        <div class="orden-extra-left">
+                            <div class="schedule-toggle-row">
+                                <input type="checkbox" id="ord-24h" />
+                                <label for="ord-24h">Horarios 24H</label>
+                            </div>
+
+                            <div class="orden-extra-grid">
+                                <div class="form-group">
+                                    <label>Horarios</label>
+                                    <textarea id="ord-horarios" placeholder="8:00, 10:00, 12:00, 14:00, 16:00, 19:00">8:00, 10:00, 12:00, 14:00, 16:00, 19:00</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Días Pauta</label>
+                                    <textarea id="ord-dias" placeholder="LUNES A VIERNES">LUNES A VIERNES</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="orden-summary-panel">
+                            <div class="orden-summary-divider"></div>
+                            <div class="orden-summary-box">
+                                <div class="value-display" id="valor-display">$0</div>
+                            </div>
+                            <div class="orden-summary-label">VALOR TOTAL DE LA ORDEN</div>
+                        </div>
+                    </div>
+
+                    <div class="orden-actions-row">
+                        <button type="button" class="btn btn-gold">💾 Guardar Orden</button>
+                        <button type="button" class="btn btn-success" id="btn-go-factura">🧾 Generar Factura</button>
+                        <button type="button" class="btn btn-info" id="btn-go-certificacion">📄 Generar Certificación</button>
+                        <button type="button" class="btn btn-danger">🚫 Anular Orden</button>
                         <button type="reset" class="btn btn-outline">Limpiar</button>
                     </div>
                 </form>

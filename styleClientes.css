@@ -91,6 +91,37 @@ header .boton-salir button {
     font-size: 0.8rem;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.admin-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    background: #20304a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.15);
+}
+
+.admin-status.is-inactive .status-dot {
+    background: var(--danger);
+    box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15);
+}
+
 /* HEADER */
 .text-prin {
     padding: 2.5rem 2.4rem 1rem;
