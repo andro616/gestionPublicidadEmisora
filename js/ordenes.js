@@ -119,4 +119,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ================= CLIENTE =================
+    const selectCliente = document.getElementById('cliente_select');
+    const inputNombre = document.getElementById('cliente_nombre');
+    const inputId = document.getElementById('cliente_id'); // NUEVO: input oculto
+
+    if (selectCliente && inputNombre && inputId) {
+        selectCliente.addEventListener('change', () => {
+            const opcion = selectCliente.options[selectCliente.selectedIndex];
+
+            const nombre = opcion.getAttribute('data-nombre') || '';
+            const id = opcion.value || ''; // el id seleccionado
+
+            inputNombre.value = nombre;  // llena el nombre
+            inputId.value = id;          // llena el input oculto
+        });
+    }
+
+    // ================= FACTURA =================
+    const botonesFactura = document.querySelectorAll('.btn-action.factura');
+
+    botonesFactura.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idOrden = btn.getAttribute('data-id');
+            if (!idOrden) return;
+
+            // Abrir PDF en nueva ventana
+            window.open(`funciones/generarfactura.php?id=${idOrden}`, '_blank');
+        });
+    });
+
+    // ================= ANULAR ORDEN =================
+    const botonesAnular = document.querySelectorAll('.btn-action.anular');
+
+    botonesAnular.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const rol = btn.getAttribute('data-rol');
+
+            // Verificar rol
+            if (rol !== 'admin' && rol !== 'superadmin') {
+                alert('No tienes permisos para anular órdenes');
+                return;
+            }
+
+            const idOrden = btn.getAttribute('data-id');
+            if (!idOrden) return;
+
+            // Pedir motivo
+            let motivo = prompt("Ingrese el motivo de la anulación:", "Por revisar");
+            if (motivo === null) return; // Usuario canceló
+
+            // Pedir comentarios adicionales
+            let comentarios = prompt("Ingrese comentarios adicionales (opcional):", "");
+            if (comentarios === null) comentarios = "";
+
+            // Confirmación final
+            const confirmar = confirm(`¿Deseas realmente anular la orden ${idOrden}?`);
+            if (!confirmar) return;
+
+            // Redirigir a script de anulación con parámetros
+            window.location.href = `funciones/anularorden.php?id=${idOrden}&motivo=${encodeURIComponent(motivo)}&comentarios=${encodeURIComponent(comentarios)}`;
+        });
+    });
 });

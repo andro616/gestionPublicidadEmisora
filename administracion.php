@@ -151,7 +151,6 @@ if (isset($_GET['buscar'])) {
         </div>
     </main>
 
-    <!-- JS AL FINAL (MEJOR PRÁCTICA) -->
     <script src="js/administracion.js"></script>
 
 </body>

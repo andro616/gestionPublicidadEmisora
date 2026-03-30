@@ -62,6 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Listado
 $ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
+
+// Obtener rol del usuario
+$rolUsuario = $_SESSION['usuario']['rol'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -123,8 +126,6 @@ $ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
         <div class="tabs-container">
             <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
             <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
-            <button class="tab-link" id="tab-factura">GENERAR FACTURA</button>
-            <button class="tab-link" id="tab-certificacion">GENERAR CERTIFICACIÓN</button>
         </div>
 
         <hr class="tab-separator">
@@ -165,8 +166,13 @@ $ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
                             <td>$<?= number_format($o['valor'], 0, ',', '.') ?></td>
                             <td><?= $o['estado'] ?? 'Activa' ?></td>
                             <td class="acciones-cell">
-                                <button type="button" class="btn-action edit">✏️</button>
-                                <button type="button" class="btn-action delete">🗑️</button>
+                                <button type="button" class="btn-action factura" data-id="<?= $o['id'] ?>">Factura</button>
+                                <button type="button" class="btn-action certificacion">Certificación</button>
+                                <button type="button" class="btn-action anular" 
+                                        data-id="<?= $o['id'] ?>" 
+                                        data-rol="<?= $rolUsuario ?>">
+                                    Anular
+                                </button>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -202,7 +208,7 @@ $ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
                     </div>
 
                     <div class="form-group">
-                        <label>Número de Presupuesto</label>
+                        <label>Número Presupuesto</label>
                         <input type="number" name="numero_presupuesto">
                     </div>
 
@@ -279,9 +285,6 @@ $ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
                 <!-- BOTONES -->
                 <div class="orden-actions-row">
                     <button type="submit" class="btn btn-gold">💾 Guardar Orden</button>
-                    <button type="button" class="btn btn-success">🧾 Generar Factura</button>
-                    <button type="button" class="btn btn-info">📄 Generar Certificación</button>
-                    <button type="button" class="btn btn-danger">🚫 Anular Orden</button>
                     <button type="reset" class="btn btn-outline">Limpiar</button>
                 </div>
 
