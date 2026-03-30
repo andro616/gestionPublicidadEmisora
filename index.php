@@ -41,9 +41,24 @@ if (!isset($_SESSION['usuario'])) {
         </nav>
 
         <div class="header-actions">
-            <div class="admin-status is-active" aria-label="Administrador activo">
+            <div class="admin-status is-active" aria-label="Estado del usuario">
                 <span class="status-dot"></span>
-                <span>Administrador</span>
+                <span>
+                    <?php 
+                    // Mostrar nombre y rol del usuario logueado
+                    if(isset($_SESSION['usuario'])) {
+                        $nombre = $_SESSION['usuario']['nombre'] ?? 'Usuario';
+                        $rol = $_SESSION['usuario']['rol'] ?? 'usuario';
+                        
+                        // Capitalizar el rol para mostrarlo bonito
+                        $rolMostrar = ucfirst($rol);
+                        
+                        echo htmlspecialchars($nombre) . ' (' . htmlspecialchars($rolMostrar) . ')';
+                    } else {
+                        echo 'Invitado';
+                    }
+                    ?>
+                </span>
             </div>
             <div class="boton-salir">
                 <button><a href="funciones/logout.php">Salir</a></button>
