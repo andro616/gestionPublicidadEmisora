@@ -1,11 +1,69 @@
 <?php
 session_start();
+date_default_timezone_set('America/Bogota');
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
 }
+
+include("funciones/bd.php");
+
+// Número automático
+$resultNum = mysqli_query($conexionBd, "SELECT MAX(numero_orden) as maximo FROM ordenes");
+$filaNum = mysqli_fetch_assoc($resultNum);
+$siguienteOrden = $filaNum['maximo'] ? $filaNum['maximo'] + 1 : 1;
+
+// Clientes
+$clientes = mysqli_query($conexionBd, "SELECT id, nit, nombre FROM clientes");
+
+// Guardar
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $stmtCliente = mysqli_prepare($conexionBd, "SELECT nombre, nit FROM clientes WHERE id = ?");
+    mysqli_stmt_bind_param($stmtCliente, "i", $_POST['cliente_id']);
+    mysqli_stmt_execute($stmtCliente);
+    $resCliente = mysqli_stmt_get_result($stmtCliente);
+    $cliente = mysqli_fetch_assoc($resCliente);
+
+    $stmt = mysqli_prepare($conexionBd,
+        "INSERT INTO ordenes 
+        (numero_orden, numero_presupuesto, cliente_id, nit_cliente, nombre_cliente, producto, referencia,
+        fecha_orden, fecha_inicio, fecha_fin, cunas_dia, duracion, valor, horarios, dias)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param($stmt, "iiisssssssiidss",
+        $_POST['numero_orden'],
+        $_POST['numero_presupuesto'],
+        $_POST['cliente_id'],
+        $cliente['nit'],
+        $cliente['nombre'],
+        $_POST['producto'],
+        $_POST['referencia'],
+        $_POST['fecha_orden'],
+        $_POST['fecha_inicio'],
+        $_POST['fecha_fin'],
+        $_POST['cunas'],
+        $_POST['duracion'],
+        $_POST['valor'],
+        $_POST['horarios'],
+        $_POST['dias']
+    );
+
+    mysqli_stmt_execute($stmt);
+
+    echo "<script>
+        alert('Orden guardada correctamente');
+        window.location='ordenes.php';
+    </script>";
+    exit();
+}
+
+// Listado
+$ordenes = mysqli_query($conexionBd, "SELECT * FROM ordenes ORDER BY id DESC");
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,336 +71,227 @@ if (!isset($_SESSION['usuario'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/avif" href="../img/logo.avif">
-    <link rel="stylesheet" href="../css/styleOrdenes.css">
+    <link rel="stylesheet" href="css/styleOrdenes.css">
     <title>Celestial Stereo 104.1 FM — Sistema de Gestión Publicitaria</title>
 </head>
 
 <body>
-    <header>
-        <div class="topbar-brand">
-            🎙 Celestial <span>104.1 FM</span>
+
+<header>
+    <div class="topbar-brand">
+        🎙 Celestial <span>104.1 FM</span>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="index.php">DASHBOARD</a></li>
+            <li><a href="clientes.php">CLIENTES</a></li>
+            <li><a href="ordenes.php" class="active-link">ÓRDENES</a></li>
+            <li><a href="anuladas.php">ANULADAS</a></li>
+            <li><a href="confirmacion.php">CONFIRMACIÓN</a></li>
+            <li><a href="administracion.php">ADMINISTRACIÓN</a></li>
+        </ul>
+    </nav>
+
+    <div class="header-actions">
+        <div class="admin-status is-active">
+            <span class="status-dot"></span>
+            <span><?= $_SESSION['usuario']['nombre'] ?></span>
         </div>
 
-        <nav>
-            <ul>
-                <li><a href="index.php">DASHBOARD</a></li>
-                <li><a href="clientes.php">CLIENTES</a></li>
-                <li><a href="ordenes.php">ÓRDENES</a></li>
-                <li><a href="anuladas.php">ANULADAS</a></li>
-                <li><a href="confirmacion.php">CONFIRMACIÓN</a></li>
-                <li><a href="administracion.php">ADMINISTRACIÓN</a></li>
-            </ul>
-        </nav>
-
-        <div class="header-actions">
-            <div class="admin-status is-active" aria-label="Administrador activo">
-                <span class="status-dot"></span>
-                <span>Administrador</span>
-            </div>
-            <div class="boton-salir">
-                <button><a href="funciones/logout.php">Salir</a></button>
-            </div>
+        <div class="boton-salir">
+            <a href="funciones/logout.php">
+                <button>Salir</button>
+            </a>
         </div>
-    </header>
+    </div>
+</header>
 
-    <section class="text-prin">
-        <div class="dashboard-container">
-            <div class="titulo-boton">
-                <h1>Órdenes de Publicidad</h1>
-                <p>Registro y gestión de órdenes de pauta</p>
-            </div>
+<section class="text-prin">
+    <div class="dashboard-container">
+        <div class="titulo-boton">
+            <h1>Órdenes de Publicidad</h1>
+            <p>Registro y gestión de órdenes de pauta</p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <main class="page-grid">
-        <div class="main-card">
+<main class="page-grid">
+    <div class="main-card">
 
-            <div class="tabs-container">
-                <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
-                <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
-                <button class="tab-link" id="tab-factura">GENERAR FACTURA</button>
-                <button class="tab-link" id="tab-certificacion">GENERAR CERTIFICACION</button>
-            </div>
+        <!-- TABS -->
+        <div class="tabs-container">
+            <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
+            <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
+            <button class="tab-link" id="tab-factura">GENERAR FACTURA</button>
+            <button class="tab-link" id="tab-certificacion">GENERAR CERTIFICACIÓN</button>
+        </div>
 
-            <hr class="tab-separator">
+        <hr class="tab-separator">
 
-            <section id="lista" class="tab-content active">
+        <!-- LISTA -->
+        <section id="lista" class="tab-content active">
 
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar por número, cliente o producto..." id="busqueda">
-                    <button type="button" class="btn-buscar">BUSCAR</button>
-                </div>
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th>N° Orden</th>
+                        <th>N° Presupuesto</th>
+                        <th>Cliente</th>
+                        <th>Producto</th>
+                        <th>Referencia</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Cuñas/día</th>
+                        <th>Duración</th>
+                        <th>Valor</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
 
-                <table class="main-table">
-                    <thead>
+                <tbody>
+                    <?php while($o = mysqli_fetch_assoc($ordenes)): ?>
                         <tr>
-                            <th>N° Orden</th>
-                            <th>N° Presupuesto</th>
-                            <th>Cliente</th>
-                            <th>Producto</th>
-                            <th>Referencia</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th>Cuñas/día</th>
-                            <th>Duración</th>
-                            <th>Valor</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>165</td>
-                            <td>6</td>
-                            <td>Bancolombia</td>
-                            <td>Marcas</td>
-                            <td>Campaña Feb</td>
-                            <td>03/03/2014</td>
-                            <td>31/03/2014</td>
-                            <td>6</td>
-                            <td>30 seg</td>
-                            <td>$420.000</td>
-                            <td>Activa</td>
+                            <td><?= $o['numero_orden'] ?></td>
+                            <td><?= $o['numero_presupuesto'] ?></td>
+                            <td><?= $o['nombre_cliente'] ?></td>
+                            <td><?= $o['producto'] ?></td>
+                            <td><?= $o['referencia'] ?></td>
+                            <td><?= date("d/m/Y", strtotime($o['fecha_inicio'])) ?></td>
+                            <td><?= date("d/m/Y", strtotime($o['fecha_fin'])) ?></td>
+                            <td><?= $o['cunas_dia'] ?></td>
+                            <td><?= $o['duracion'] ?> seg</td>
+                            <td>$<?= number_format($o['valor'], 0, ',', '.') ?></td>
+                            <td><?= $o['estado'] ?? 'Activa' ?></td>
                             <td class="acciones-cell">
                                 <button type="button" class="btn-action edit">✏️</button>
                                 <button type="button" class="btn-action delete">🗑️</button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>165</td>
-                            <td>6</td>
-                            <td>Bancolombia</td>
-                            <td>Marcas</td>
-                            <td>Campaña Feb</td>
-                            <td>03/03/2014</td>
-                            <td>31/03/2014</td>
-                            <td>6</td>
-                            <td>30 seg</td>
-                            <td>$420.000</td>
-                            <td>Activa</td>
-                            <td class="acciones-cell">
-                                <button type="button" class="btn-action edit">✏️</button>
-                                <button type="button" class="btn-action delete">🗑️</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>165</td>
-                            <td>6</td>
-                            <td>Bancolombia</td>
-                            <td>Marcas</td>
-                            <td>Campaña Feb</td>
-                            <td>03/03/2014</td>
-                            <td>31/03/2014</td>
-                            <td>6</td>
-                            <td>30 seg</td>
-                            <td>$420.000</td>
-                            <td>Activa</td>
-                            <td class="acciones-cell">
-                                <button type="button" class="btn-action edit">✏️</button>
-                                <button type="button" class="btn-action delete">🗑️</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
 
-            <section id="registro" class="tab-content">
+        </section>
 
-                <div class="registro-clientes-tex">
-                    <div class="titulo-clientes-registro">
-                        <h1>Orden de Publicidad</h1>
-                        <p>Módulo Nueva Orden</p>
-                    </div>
-                </div>
-                <form class="form-registro">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Número de Orden</label>
-                            <input type="number" id="ord-num" placeholder="Autogenerado" value="166">
-                        </div>
-                        <div class="form-group">
-                            <label>Cliente (NIT)</label>
-                            <select id="ord-cliente">
-                                <option>800185826-2 — Radio Regional Independiente L.</option>
-                                <option>860007738-4 — Bancolombia S.A.</option>
-                                <option>900073222-1 — Claro Colombia S.A.S.</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Número de Presupuesto</label>
-                            <input type="number" id="ord-presup" placeholder="7">
-                        </div>
-                        <div class="form-group">
-                            <label>Nombre del Cliente</label>
-                            <input type="text" id="ord-cliente-name">
-                        </div>
-                        <div class="form-group">
-                            <label>Producto</label>
-                            <input type="text" id="ord-producto" placeholder="Ej: BANCOLOMBIA">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Orden</label>
-                            <input type="date" id="ord-fecha">
-                        </div>
-                        <div class="form-group">
-                            <label>Referencia</label>
-                            <input type="text" id="ord-ref" placeholder="Ej: MARCAS">
-                        </div>
-                        <div class="form-group">
-                            <label>Valor ($)</label>
-                            <input type="number" id="ord-valor" placeholder="420000">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Inicio</label>
-                            <input type="date" id="ord-inicio">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Terminación</label>
-                            <input type="date" id="ord-fin">
-                        </div>
-                        <div class="form-group">
-                            <label>No. de Cuñas Diarias</label>
-                            <input type="number" id="ord-cunas" placeholder="6">
-                        </div>
-                        <div class="form-group">
-                            <label>Duración (segundos)</label>
-                            <input type="number" id="ord-duracion" placeholder="30">
-                        </div>
+        <!-- REGISTRO -->
+        <section id="registro" class="tab-content">
+
+            <form method="POST" class="form-registro">
+
+                <input type="hidden" name="cliente_id" id="cliente_id">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Número de Orden</label>
+                        <input type="number" name="numero_orden" value="<?= $siguienteOrden ?>" readonly>
                     </div>
 
-                    <div class="section-divider"></div>
-
-                    <div class="orden-extra-layout">
-                        <div class="orden-extra-left">
-                            <div class="schedule-toggle-row">
-                                <input type="checkbox" id="ord-24h" />
-                                <label for="ord-24h">Horarios 24H</label>
-                            </div>
-
-                            <div class="orden-extra-grid">
-                                <div class="form-group">
-                                    <label>Horarios</label>
-                                    <textarea id="ord-horarios" placeholder="8:00, 10:00, 12:00, 14:00, 16:00, 19:00">8:00, 10:00, 12:00, 14:00, 16:00, 19:00</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Días Pauta</label>
-                                    <textarea id="ord-dias" placeholder="LUNES A VIERNES">LUNES A VIERNES</textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="orden-summary-panel">
-                            <div class="orden-summary-divider"></div>
-                            <div class="orden-summary-box">
-                                <div class="value-display" id="valor-display">$0</div>
-                            </div>
-                            <div class="orden-summary-label">VALOR TOTAL DE LA ORDEN</div>
-                        </div>
+                    <div class="form-group">
+                        <label>Cliente (NIT)</label>
+                        <select id="cliente_select">
+                            <option value="">Seleccione</option>
+                            <?php while($c = mysqli_fetch_assoc($clientes)): ?>
+                                <option value="<?= $c['id'] ?>" data-nombre="<?= $c['nombre'] ?>">
+                                    <?= $c['nit'] ?> — <?= $c['nombre'] ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
 
-                    <div class="orden-actions-row">
-                        <button type="button" class="btn btn-gold">💾 Guardar Orden</button>
-                        <button type="button" class="btn btn-success" id="btn-go-factura">🧾 Generar Factura</button>
-                        <button type="button" class="btn btn-info" id="btn-go-certificacion">📄 Generar Certificación</button>
-                        <button type="button" class="btn btn-danger">🚫 Anular Orden</button>
-                        <button type="reset" class="btn btn-outline">Limpiar</button>
+                    <div class="form-group">
+                        <label>Número de Presupuesto</label>
+                        <input type="number" name="numero_presupuesto">
                     </div>
-                </form>
-            </section>
 
-            <section id="factura" class="tab-content">
-                <div class="doc-header">
-                    <div>
-                        <h2>Generar Factura</h2>
-                        <p>Vista previa del documento listo para impresión</p>
+                    <div class="form-group">
+                        <label>Nombre del Cliente</label>
+                        <input type="text" name="nombre_cliente" id="cliente_nombre" readonly>
                     </div>
-                    <button type="button" class="btn btn-gold" onclick="window.print()">Imprimir</button>
+
+                    <div class="form-group">
+                        <label>Producto</label>
+                        <input type="text" name="producto">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Orden</label>
+                        <input type="date" name="fecha_orden" value="<?= date('Y-m-d') ?>" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Referencia</label>
+                        <input type="text" name="referencia">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Valor ($)</label>
+                        <input type="number" name="valor">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Inicio</label>
+                        <input type="date" name="fecha_inicio">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Terminación</label>
+                        <input type="date" name="fecha_fin">
+                    </div>
+
+                    <div class="form-group">
+                        <label>No. de Cuñas Diarias</label>
+                        <input type="number" name="cunas">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Duración (segundos)</label>
+                        <input type="number" name="duracion">
+                    </div>
+
                 </div>
 
-                <article class="doc-preview doc-paper">
-                    <div class="doc-logo">
-                        <img src="img/logo.avif" alt="Logo Celestial Stereo" class="doc-logo-img">
-                        <div>
-                            <p class="doc-logo-name">Corporación Juan Valdez de Santa Rosa de Cabal</p>
-                            <p class="doc-logo-meta">CELESTIAL STEREO 104.1 FM · NIT 890.001.901-1</p>
-                        </div>
-                    </div>
-
-                    <h3 class="doc-title">FACTURA DE PUBLICIDAD RADIAL</h3>
-
-                    <div class="doc-field"><span>Fecha:</span><strong>07 de mayo de 2014</strong></div>
-                    <div class="doc-field doc-field-single"><span>Publicidad Radial — Transmitida en la emisora Celestial Stereo 104.1 FM</span></div>
-                    <div class="doc-field"><span>Orden de Publicidad No.:</span><strong>165</strong></div>
-                    <div class="doc-field"><span>Transmisión:</span><strong>03/03/2014 — 31/03/2014</strong></div>
-                    <div class="doc-field"><span>Cliente:</span><strong>BANCOLOMBIA</strong></div>
-                    <div class="doc-field"><span>Producto:</span><strong>MARCAS</strong></div>
-                    <div class="doc-field"><span>Cuñas diarias:</span><strong>6</strong></div>
-                    <div class="doc-field"><span>Días de pauta:</span><strong>LUNES A VIERNES</strong></div>
-                    <div class="doc-field"><span>Horarios:</span><strong>8:00, 10:00, 12:00, 14:00, 16:00, 19:00</strong></div>
-
-                    <div class="doc-total-box">
-                        <b>TOTAL: $420.000</b>
-                        <small>CUATROCIENTOS VEINTE MIL PESOS M/CTE</small>
-                    </div>
-
-                    <p class="doc-note">
-                        FAVOR HACER CHEQUE Y/O TRANSFERENCIA A CORPORACIÓN JUAN VALDEZ DE SANTA ROSA DE CABAL,
-                        IDENTIFICADA CON NIT No. 890.001.901-1.
-                        Y DEPOSITAR EN EL BANCO DE BOGOTÁ A LA CUENTA CORRIENTE No. 512-01020-8.
-                    </p>
-
-                    <div class="doc-signature">
-                        <p>HÉCTOR ARIEL ALARCON CASPIO</p>
-                        <small>Director Emisora Comunitaria</small>
-                    </div>
-                </article>
-            </section>
-
-            <section id="certificacion" class="tab-content">
-                <div class="doc-header">
-                    <div>
-                        <h2>Generar Certificación</h2>
-                        <p>Documento de cumplimiento de transmisión</p>
-                    </div>
-                    <button type="button" class="btn btn-gold" onclick="window.print()">Imprimir</button>
+                <!-- DÍAS -->
+                <div id="dias-container">
+                    <label><input type="checkbox" value="Lunes"><span>Lunes</span></label>
+                    <label><input type="checkbox" value="Martes"><span>Martes</span></label>
+                    <label><input type="checkbox" value="Miércoles"><span>Miércoles</span></label>
+                    <label><input type="checkbox" value="Jueves"><span>Jueves</span></label>
+                    <label><input type="checkbox" value="Viernes"><span>Viernes</span></label>
+                    <label><input type="checkbox" value="Sábado"><span>Sábado</span></label>
+                    <label><input type="checkbox" value="Domingo"><span>Domingo</span></label>
                 </div>
 
-                <article class="doc-preview doc-paper">
-                    <div class="doc-logo">
-                        <img src="img/logo.avif" alt="Logo Celestial Stereo" class="doc-logo-img">
-                        <div>
-                            <p class="doc-logo-name">Corporación Juan Valdez de Santa Rosa de Cabal</p>
-                            <p class="doc-logo-meta">CELESTIAL STEREO 104.1 FM · NIT 890.001.901-1</p>
-                        </div>
+                <!-- HORARIOS -->
+                <div class="form-group">
+                    <label>Horarios</label>
+                    <div id="horarios-container">
+                        <input type="time" class="hora">
+                        <button type="button" id="addHora">+ Añadir horario</button>
                     </div>
+                </div>
 
-                    <h3 class="doc-title">CERTIFICACIÓN DE PAUTA</h3>
+                <input type="hidden" name="dias" id="ord-dias">
+                <input type="hidden" name="horarios" id="ord-horarios">
 
-                    <p class="doc-note doc-note-intro">
-                        Por este medio certifico que la radio al transmitir la siguiente pauta en las fechas y
-                        territorios relacionados a continuación:
-                    </p>
+                <!-- BOTONES -->
+                <div class="orden-actions-row">
+                    <button type="submit" class="btn btn-gold">💾 Guardar Orden</button>
+                    <button type="button" class="btn btn-success">🧾 Generar Factura</button>
+                    <button type="button" class="btn btn-info">📄 Generar Certificación</button>
+                    <button type="button" class="btn btn-danger">🚫 Anular Orden</button>
+                    <button type="reset" class="btn btn-outline">Limpiar</button>
+                </div>
 
-                    <div class="doc-field"><span>Ordenado Por:</span><strong>RADIO REGIONAL INDEPENDIENTE L.</strong></div>
-                    <div class="doc-field"><span>Cliente:</span><strong>BANCOLOMBIA</strong></div>
-                    <div class="doc-field"><span>Referencia:</span><strong>MARCAS</strong></div>
-                    <div class="doc-field"><span>Vigencia:</span><strong>01/03/2014 al 31/03/2014</strong></div>
-                    <div class="doc-field"><span>Orden No.:</span><strong>165</strong></div>
-                    <div class="doc-field"><span>Días de Pauta:</span><strong>LUNES A VIERNES</strong></div>
-                    <div class="doc-field"><span>Cuñas Diarias:</span><strong>6</strong></div>
-                    <div class="doc-field"><span>Horarios:</span><strong>8:00, 10:00, 12:00, 14:00, 16:00, 19:00</strong></div>
+            </form>
+        </section>
 
-                    <p class="doc-note doc-note-after">Para administrar en Santa Rosa de Cabal ante el 07 días del mes de Mayo de 2014.</p>
-                    <p class="doc-note doc-note-after">Cordialmente,</p>
+    </div>
+</main>
 
-                    <div class="doc-signature">
-                        <p>HÉCTOR ARIEL ALARCON CASPIO</p>
-                        <small>Director Emisora Comunitaria</small>
-                    </div>
-                </article>
-            </section>
-        </div>
-    </main>
-    <script src="../js/ordenes.js"></script>
+<script src="js/ordenes.js"></script>
+
 </body>
 </html>

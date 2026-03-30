@@ -775,3 +775,131 @@ input[type="checkbox"] {
         max-width: 100%;
     }
 }
+
+/* ================= DIAS PAUTADOS (MEJORADO UI PRO) ================= */
+#dias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+#dias-container label {
+    position: relative;
+    cursor: pointer;
+}
+
+#dias-container input {
+    display: none;
+}
+
+/* CHIP BASE */
+#dias-container span {
+    display: inline-block;
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.78rem;
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+#dias-container label:hover span {
+    border-color: var(--gold);
+    color: var(--white);
+}
+
+/* ACTIVO */
+#dias-container input:checked + span {
+    background: var(--gold);
+    color: var(--navy-mid);
+    border-color: var(--gold);
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(201,168,76,0.25);
+}
+
+/* ================= HORARIOS (UI MEJORADO) ================= */
+#horarios-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-top: 0.4rem;
+}
+
+/* INPUT HORA */
+#horarios-container .hora {
+    min-width: 120px;
+    padding: 0.55rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--navy-light);
+    color: var(--white);
+    font-size: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+/* FOCUS */
+#horarios-container .hora:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+}
+
+/* BOTÓN AGREGAR */
+#addHora {
+    background: transparent;
+    border: 1px dashed var(--gold);
+    color: var(--gold);
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: all 0.25s ease;
+}
+
+/* HOVER BOTÓN */
+#addHora:hover {
+    background: rgba(201, 168, 76, 0.12);
+    transform: translateY(-1px);
+}
+
+#horarios-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+#horarios-container .hora {
+    min-width: 120px;
+}
+
+#dias-container input {
+    display: none;
+}
+
+#dias-container input:checked + span {
+    color: var(--navy-mid);
+    background: var(--gold);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+#addHora:hover {
+    background: rgba(201, 168, 76, 0.1);
+}
+
+/* ================= CAMPOS FULL WIDTH ================= */
+.form-group.full {
+    grid-column: span 2;
+}
+
+/* RESPONSIVE AJUSTE */
+@media (max-width: 900px) {
+    .form-group.full {
+        grid-column: span 1;
+    }
+}

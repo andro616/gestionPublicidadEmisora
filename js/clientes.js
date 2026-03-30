@@ -1,70 +1,50 @@
-// Esperar a que todo el DOM cargue
+// 1. Esperamos a que el HTML cargue totalmente
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==============================
-    // 1. SELECTORES SEGUROS
-    // ==============================
+    // 2. Seleccionamos los botones por su ID (los que tú creaste)
     const btnLista = document.getElementById('tab-lista');
     const btnRegistro = document.getElementById('tab-registro');
-    const btnNuevoTop = document.querySelector('.nueva-orden');
+    const btnNuevoTop = document.querySelector('.nueva-orden'); // El botón dorado de arriba
 
+    // 3. Seleccionamos las secciones de contenido
     const sectionLista = document.getElementById('section-lista');
     const sectionRegistro = document.getElementById('section-registro');
 
-    // Validación para evitar errores si algo no existe
-    if (!btnLista || !btnRegistro || !sectionLista || !sectionRegistro) {
-        console.warn("⚠️ Error: Tabs no encontrados en el DOM");
-        return;
-    }
+    // 4. Función para cambiar de pestaña
+    function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
+        // Usamos clases en lugar de inline styles por consistency
+        seccionAOcultar.classList.remove('active');
+        seccionAMostrar.classList.add('active');
 
-    // ==============================
-    // 2. FUNCIÓN DE CAMBIO DE TABS
-    // ==============================
-    function cambiarTab(seccionMostrar, seccionOcultar, botonActivo, botonInactivo) {
-        seccionOcultar.classList.remove('active');
-        seccionMostrar.classList.add('active');
-
+        // Cambiamos la apariencia de los botones
         botonActivo.classList.add('active');
         botonInactivo.classList.remove('active');
     }
 
-    // ==============================
-    // 3. EVENTOS DE TABS
-    // ==============================
-    btnLista.addEventListener('click', (e) => {
-        e.preventDefault();
+    // 5. Escuchamos los clics en los botones
+    btnLista.addEventListener('click', () => {
         cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
     });
 
-    btnRegistro.addEventListener('click', (e) => {
-        e.preventDefault();
+    btnRegistro.addEventListener('click', () => {
         cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
     });
 
-    // ==============================
-    // 4. BOTÓN SUPERIOR "+ NUEVO"
-    // ==============================
-    if (btnNuevoTop) {
-        btnNuevoTop.addEventListener('click', (e) => {
-            e.preventDefault();
+    // Bonus: El botón dorado "+ NUEVO CLIENTE" también debe llevar al registro
+    if(btnNuevoTop) {
+        btnNuevoTop.addEventListener('click', () => {
             cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
-
-            // Scroll suave hacia el formulario
-            sectionRegistro.scrollIntoView({ behavior: 'smooth' });
         });
     }
 
-    // ==============================
-    // 5. MARCAR LINK ACTIVO DEL NAVBAR
-    // ==============================
+    // 6. Marca el enlace activo de navegación según URL
     function markActiveNavLink() {
         const menuLinks = document.querySelectorAll('header nav ul li a');
-        const currentPage = window.location.pathname.split('/').pop();
+        const currentPath = window.location.pathname.split('/').pop();
 
         menuLinks.forEach(link => {
             const href = link.getAttribute('href');
-
-            if (href === currentPage) {
+            if (href === currentPath || (href === 'index.html' && currentPath === '')) {
                 link.classList.add('active-link');
             } else {
                 link.classList.remove('active-link');
@@ -73,15 +53,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     markActiveNavLink();
-
-    // ==============================
-    // 6. OPCIONAL: MANTENER TAB ACTIVO TRAS RECARGA
-    // ==============================
-    const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get('tab');
-
-    if (tab === 'registro') {
-        cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
-    }
-
 });

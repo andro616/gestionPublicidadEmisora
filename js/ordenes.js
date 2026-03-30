@@ -72,4 +72,51 @@ document.addEventListener('DOMContentLoaded', () => {
             link.classList.remove('active-link');
         }
     });
+ // ================= DIAS =================
+    const checkDias = document.querySelectorAll('#dias-container input');
+    const inputDias = document.getElementById('ord-dias');
+
+    if (checkDias.length && inputDias) {
+        checkDias.forEach(chk => {
+            chk.addEventListener('change', () => {
+                const seleccionados = Array.from(checkDias)
+                    .filter(c => c.checked)
+                    .map(c => c.value);
+
+                inputDias.value = seleccionados.join(', ');
+            });
+        });
+    }
+
+    // ================= HORARIOS =================
+    const contHorarios = document.getElementById('horarios-container');
+    const inputHorarios = document.getElementById('ord-horarios');
+    const btnAdd = document.getElementById('addHora');
+
+    if (contHorarios && inputHorarios && btnAdd) {
+
+        btnAdd.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'time';
+            input.classList.add('hora');
+
+            contHorarios.insertBefore(input, btnAdd);
+        });
+
+        // Capturar antes de enviar
+        const form = document.querySelector('form');
+
+        if (form) {
+            form.addEventListener('submit', () => {
+                const horas = document.querySelectorAll('.hora');
+
+                const lista = Array.from(horas)
+                    .map(h => h.value)
+                    .filter(v => v !== '');
+
+                inputHorarios.value = lista.join(', ');
+            });
+        }
+    }
+
 });
